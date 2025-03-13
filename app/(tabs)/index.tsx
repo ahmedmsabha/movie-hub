@@ -1,74 +1,193 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { icons } from "@/constants/icons";
+import { images } from "@/constants/images";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+} from "react-native";
+import { useRouter } from "expo-router";
+import SearchBar from "@/components/search-bar";
+import { useGetTrendingMovies, useMoviesInfiniteList } from "@/services/query";
+import { MovieCard } from "@/components/movie-card";
+import React, { useState, useEffect } from "react";
+import { TrendingCard } from "@/components/trending-card";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function Index() {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
 
-export default function HomeScreen() {
+  const [allMovies, setAllMovies] = useState<Movie[]>([]);
+  const [refreshing, setRefreshing] = useState(false); // State for refresh control
+
+  const {
+    data: trendingMovies,
+    isLoading: isTrendingMoviesLoading,
+    error: trendingMoviesError,
+    refetch: refetchTrendingMovies,
+  } = useGetTrendingMovies();
+
+  const {
+    data: moviesInfiniteList,
+    isLoading,
+    error,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    refetch: refetchMoviesInfiniteList,
+  } = useMoviesInfiniteList({ query: "" });
+
+  useEffect(() => {
+    if (moviesInfiniteList?.pages) {
+      const newMovies = moviesInfiniteList.pages.flatMap((page) => page);
+      setAllMovies(newMovies);
+    }
+  }, [moviesInfiniteList]);
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+    const { y } = contentOffset;
+    const contentHeight = contentSize.height;
+    const viewportHeight = layoutMeasurement.height;
+
+    const distanceFromBottom = contentHeight - (y + viewportHeight);
+    if (distanceFromBottom < 100 && !isFetching && hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([refetchTrendingMovies(), refetchMoviesInfiniteList()]);
+    setRefreshing(false);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
+    <View
+      style={{
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom + 70, // Extra padding for tab bar
+      }}
+      className="flex-1 bg-primary"
+    >
+      <Image
+        source={images.bg}
+        className="absolute w-full z-0"
+        resizeMode="contain"
+      />
+
+      <ScrollView
+        className="flex-1 px-5"
+        showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#AB8BFF"
+            colors={["#AB8BFF"]}
+            progressBackgroundColor="#000000"
+          />
+        }
+      >
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={icons.logo}
+          className="w-12 h-10 mx-auto mb-5"
+          resizeMode="contain"
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+
+        {isLoading || isTrendingMoviesLoading ? (
+          <ActivityIndicator
+            size="large"
+            color="#0000ff"
+            className="mt-10 self-center"
+          />
+        ) : trendingMoviesError || error ? (
+          <View className="mt-10 p-4 bg-red-900/50 rounded-lg">
+            <Text className="text-white text-lg font-bold">
+              Error Loading Movies
+            </Text>
+            <Text className="text-white mt-2">
+              {error instanceof Error
+                ? error.message
+                : trendingMoviesError instanceof Error
+                ? trendingMoviesError.message
+                : "An error occurred"}
+            </Text>
+          </View>
+        ) : (
+          <View className="mt-5 flex-1">
+            <SearchBar
+              onPress={() => router.push("/search")}
+              placeholder="Search for a movie"
+            />
+
+            {trendingMovies && (
+              <View className="mt-10">
+                <Text className="text-lg text-white font-bold mb-3">
+                  Trending Movies
+                </Text>
+                <FlatList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  className="mb-4 mt-3"
+                  data={trendingMovies}
+                  contentContainerStyle={{
+                    gap: 26,
+                  }}
+                  renderItem={({ item, index }) => (
+                    <TrendingCard movie={item} index={index} />
+                  )}
+                  keyExtractor={(item) => item.movie_id.toString()}
+                  ItemSeparatorComponent={() => <View className="w-4" />}
+                />
+              </View>
+            )}
+            <>
+              <Text className="text-white text-lg font-bold mt-5 mb-3">
+                Latest Movies
+              </Text>
+
+              <FlatList
+                data={allMovies}
+                renderItem={({ item }) => <MovieCard {...item} />}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={3}
+                columnWrapperStyle={{
+                  justifyContent: "flex-start",
+                  gap: 20,
+                  marginBottom: 10,
+                  paddingRight: 5,
+                }}
+                className="mt-2 pb-10"
+                scrollEnabled={false}
+                ListFooterComponent={() => (
+                  <View className="my-4 w-full flex items-center justify-center">
+                    {isFetching ? (
+                      <ActivityIndicator size="small" color="#ffffff" />
+                    ) : hasNextPage ? (
+                      <Text className="text-white text-center">
+                        Scroll to load more...
+                      </Text>
+                    ) : (
+                      <Text className="text-white text-center">
+                        No more movies to load
+                      </Text>
+                    )}
+                  </View>
+                )}
+              />
+            </>
+          </View>
+        )}
+      </ScrollView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});

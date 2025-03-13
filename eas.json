@@ -1,0 +1,33 @@
+{
+  "cli": {
+    "version": ">= 13.1.1",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_MOVIE_API_KEY": "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzNjIxYzY0MjFlNjUzZmIxYTE4YjJmMmM2MjA5OGY5MCIsIm5iZiI6MTc0MTUwNjUxMC4wMzgsInN1YiI6IjY3Y2Q0N2NlYWQ0ODZiNDNlYmUyYmQ5ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bIIri6vnRxoEV1qpVLMl23CEwqPOhA579lLJdhxlPiE",
+        "EXPO_PUBLIC_APPWRITE_PROJECT_ID": "67cbf169003a58f9349a",
+        "EXPO_PUBLIC_APPWRITE_DATABASE_ID": "67d151c300289ad96a5e",
+        "EXPO_PUBLIC_APPWRITE_COLLECTION_ID": "67d1522400271cae53c5"
+      }
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_MOVIE_API_KEY": "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzNjIxYzY0MjFlNjUzZmIxYTE4YjJmMmM2MjA5OGY5MCIsIm5iZiI6MTc0MTUwNjUxMC4wMzgsInN1YiI6IjY3Y2Q0N2NlYWQ0ODZiNDNlYmUyYmQ5ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bIIri6vnRxoEV1qpVLMl23CEwqPOhA579lLJdhxlPiE",
+        "EXPO_PUBLIC_APPWRITE_PROJECT_ID": "67cbf169003a58f9349a",
+        "EXPO_PUBLIC_APPWRITE_DATABASE_ID": "67d151c300289ad96a5e",
+        "EXPO_PUBLIC_APPWRITE_COLLECTION_ID": "67d1522400271cae53c5"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
