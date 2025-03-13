@@ -1,50 +1,77 @@
-# Welcome to your Expo app 👋
+# Movie Hub: A Modern Movie Discovery Platform (In development)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A feature-rich mobile application for discovering and exploring movies, built with React Native and Expo. This app provides a seamless experience for browsing trending movies, searching for specific titles, and accessing detailed movie information.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Trending Movies Section**: Stay updated with the latest trending movies
+- **Infinite Scroll**: Smooth loading of movie lists with infinite scroll functionality
+- **Search Functionality**: Advanced search capabilities to find your favorite movies
+- **Responsive Design**: Beautiful UI with Tailwind CSS and NativeWind
+- **Offline Support**: Persistent data storage with React Query
+- **Smooth Animations**: Enhanced user experience with Framer Motion and Reanimated
+- **Pull-to-Refresh**: Easy content refresh functionality
+- **Cross-Platform**: Available on iOS, Android, and Web
 
+## Tech Stack
+
+### Frontend
+
+- React Native
+- Expo
+- TypeScript
+- Tailwind CSS / NativeWind
+- React Query
+- Framer Motion
+- React Native Reanimated
+
+### State Management & Data Fetching
+
+- React Query
+- Async Storage
+- Appwrite Integration
+
+### UI/UX
+
+- Custom Components
+- Responsive Design
+- Gesture Handling
+- Blur Effects
+- Linear Gradients
+
+## What This App Adds
+
+1. **Modern Mobile Experience**: A native-feeling mobile app for movie discovery
+2. **Performance Optimized**: Efficient data fetching and caching with React Query
+3. **Beautiful UI**: Modern design with smooth animations and transitions
+4. **Cross-Platform**: Seamless experience across iOS, Android, and Web
+5. **Offline Capabilities**: Persistent data storage for offline access
+6. **Real-time Updates**: Pull-to-refresh and infinite scroll for fresh content
+7. **Type Safety**: Full TypeScript implementation for better development experience
+
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies:
    ```bash
    npm install
    ```
-
-2. Start the app
-
+3. Start the development server:
    ```bash
-    npx expo start
+   npm start
    ```
+4. Run on your preferred platform:
+   - iOS: `npm run ios`
+   - Android: `npm run android`
+   - Web: `npm run web`
 
-In the output, you'll find options to open the app in a
+## Development
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Built with Expo Router for navigation
+- Uses TypeScript for type safety
+- Implements modern React patterns and hooks
+- Follows mobile-first design principles
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## License
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is private and proprietary.
